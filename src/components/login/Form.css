@@ -91,10 +91,12 @@ span {
   
   a {
     margin: 0 45px;
+    font-weight: 500;
     cursor: pointer;
   }
   .signup:hover, .login:hover{
-    color: red;
+    color: rgb(255, 11, 11);
+    
     transition: 0.4s ease;
   }
 
@@ -126,7 +128,7 @@ input:hover{
 }
 
 input::placeholder{
-    color: #cac8c8;
+    color: #6b6a6a;
 }
 
 button{
