@@ -20,10 +20,16 @@ const Form = () => {
       <div className="card">
         <div className="options">
           <span>
-            <a className={"signup"} onClick={handleSignupClick}>
+            <a
+              className={`${!displayLogin ? "active" : ""} signup`}
+              onClick={handleSignupClick}
+            >
               Signup
             </a>
-            <a className={"login"} onClick={handleLoginClick}>
+            <a
+              className={`${displayLogin ? "active" : ""} login`}
+              onClick={handleLoginClick}
+            >
               Login
             </a>
           </span>

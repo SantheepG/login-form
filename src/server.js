@@ -1,18 +1,28 @@
-// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config(); // to use environment variables
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Create the MongoDB connection string
-const connectionString = `mongodb+srv://gshantheep:cinadoc@cluster0.cz7xwta.mongodb.net/Users?retryWrites=true&w=majority`;
+// MongoDB connection string
+const connectionString =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/app";
 
-// Connect to MongoDB Atlas
-mongoose.connect(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// Connect to MongoDB
+mongoose
+  .connect(connectionString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Adjust the timeout as needed
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB", err);
+  });
 
 // Create a schema and model for the user
 const userSchema = new mongoose.Schema({
@@ -22,12 +32,11 @@ const userSchema = new mongoose.Schema({
 });
 
 // Specifying the collection name
-const User = mongoose.model("User", userSchema, "user");
+const User = mongoose.model("User", userSchema, "users");
 
 // Enabling CORS
-app.use(cors());
 const corsOptions = {
-  origin: "http://localhost:3001",
+  origin: "http://localhost:3000", // Update this to match your client's port if different
 };
 
 app.use(cors(corsOptions));
@@ -47,6 +56,25 @@ app.post("/api/signup", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error saving user to database");
+  }
+});
+
+// Login endpoint
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Finding the user in the database
+    const user = await User.findOne({ email, password });
+
+    if (user) {
+      res.status(200).send("Login successful");
+    } else {
+      res.status(400).send("Invalid email or password");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error logging in");
   }
 });
 

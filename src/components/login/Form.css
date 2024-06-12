@@ -100,6 +100,9 @@ span {
     transition: 0.4s ease;
   }
 
+  .active{
+    color: rgb(255, 11, 11);
+  }
 .form-container{
     margin: 0 0 30px; 
     display: grid;
